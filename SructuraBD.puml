@@ -1,0 +1,168 @@
+@startuml
+
+class Users {
+id
+login
+password
+id_role
+date_reg
+date_last_login
+}
+
+class Role {
+id
+name
+}
+
+Role -left-> Users
+
+class Teacher {
+id
+id_user
+lastname
+firstname
+patronymic
+id_school
+id_subject
+min_class
+max_class
+qualification
+}
+Users -down-> Teacher
+
+class Learner {
+id
+id_user
+lastname
+firstname
+patronymic
+id_class
+id_school
+}
+Users -down-> Learner
+SchoolClass -down-> Learner
+
+
+class SchoolClass  {
+id
+num
+name
+}
+
+class SchoolType {
+id
+typeName
+}
+
+class School {
+id
+name
+region
+city
+id_schoolType
+}
+
+SchoolType -down-> School
+School -down-> Learner
+School -right-> Teacher
+
+class ControlSample {
+id
+theme
+description
+class_num
+id_subject
+}
+
+Subject -down-> ControlSample
+Subject "many"-down-"many" Teacher
+(Subject, Teacher) . SubjectTeacherConnector
+class Subject {
+id
+name
+}
+
+class SubjectTeacherConnector {
+id
+id_teacher
+id_subject
+}
+
+
+
+class Questions {
+id
+id_sample
+question
+answer
+criterion
+}
+Questions -down-> ControlSample
+
+class Controls {
+id
+id_sample
+id_teacher
+id_class
+date_start
+date_verification
+id_status
+}
+ControlSample -down-> Controls
+
+
+class Status {
+id
+name
+}
+
+Teacher -> Controls
+
+class LearnerTest {
+id
+id_control
+id_learner
+id_status
+mark
+comment
+}
+
+
+LearnerTest -> Controls
+TestFile <-- LearnerTest
+Status -down-> LearnerTest
+Status -down-> Controls
+Learner -> LearnerTest
+
+class TestFile {
+id
+id_learnerTest
+filePath
+}
+
+class ControlHistory {
+id
+id_control
+id_teacher
+dateTime
+id_old_status
+id_new_status
+}
+
+Controls -> ControlHistory
+Teacher -> ControlHistory
+Status -> ControlHistory
+
+class LearnerTestHistory {
+id
+id_learnerTest
+id_learner
+dateTime
+id_old_status
+id_new_status
+}
+
+LearnerTest -down-> LearnerTestHistory
+Learner -> LearnerTestHistory
+Status -> LearnerTestHistory
+@enduml
